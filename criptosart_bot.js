@@ -16,8 +16,12 @@ app.get('/', function(request, response) {
 
 const token = process.env.BOTTOKEN;
 
-const bot = new TelegramBot(token, {polling: true});
-
+if (process.env.NODE_ENV === 'production') {
+    bot = new TelegramBot(token);
+    bot.setWebHook(process.env.HEROKU_URL + bot.token);
+ } else {
+    bot = new TelegramBot(token, { polling: true });
+ }
 bot.onText(/\/preco (.+)/, async (msg, match) => {
   var nome = match[1];
   equivalenciaNome(nome);
