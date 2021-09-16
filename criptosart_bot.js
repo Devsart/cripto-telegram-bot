@@ -33,7 +33,7 @@ if (process.env.NODE_ENV === 'production') {
  }
 bot.onText(/\/preco (.+)/, async (msg, match) => {
   var nome = match[1];
-  equivalenciaNome(nome);
+  this.getToken(nome);
 
   const chatId = msg.chat.id;
   try{
@@ -53,7 +53,7 @@ bot.onText(/\/alerta (.+)/, async (msg, match) => {
     var moeda = match[1].split(' ');
     var nome = moeda[0];
     var valor = moeda[1];
-    equivalenciaNome(nome);
+    this.getToken(nome);
 
     const chatId = msg.chat.id;
     try{
@@ -111,4 +111,17 @@ bot.onText(/\/alerta (.+)/, async (msg, match) => {
             break;
     }
   }
-
+  async function getToken(symbol){
+    try{
+        const resp = await axios.get(`https://api.coingecko.com/api/v3/coins/list`);
+        resp.data.forEach((x) => {
+            if(x.symbol == symbol.toLowerCase()){
+                symbol = x.id;
+            }
+        });
+        console.log(symbol);
+    }
+    catch(e){
+        console.log(e.message)    
+        }
+    }
