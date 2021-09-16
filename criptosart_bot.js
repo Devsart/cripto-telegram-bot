@@ -36,16 +36,17 @@ bot.onText(/\/preco (.+)/, async (msg, match) => {
 
   const chatId = msg.chat.id;
   try{
-    const resp = await axios.get(`https://api.coingecko.com/api/v3/coins/${nome}`); // the captured "whatever"
-    if(resp.status != 200){
-        const resplist = await axios.get(`https://api.coingecko.com/api/v3/coins/list`);
-        resplist.data.forEach((x) => {
-            if(x.symbol == nome.toLowerCase()){
-                nome = x.id;
-            }
-        });
-        resp = await axios.get(`https://api.coingecko.com/api/v3/coins/${nome}`);
-    }
+    var resp = await axios.get(`https://api.coingecko.com/api/v3/coins/${nome}`).catch(async function (error) {
+        if(error.response.status != 200){
+            const resplist = await axios.get(`https://api.coingecko.com/api/v3/coins/list`);
+            resplist.data.forEach((x) => {
+                if(x.symbol == nome.toLowerCase()){
+                    nome = x.id;
+                }
+            });
+        resp = await axios.get(`https://api.coingecko.com/api/v3/coins/${nome}`);                
+        }
+    });
     var preco = resp.data.market_data.current_price.usd;
     var mensagem = `O preço de ${nome} atualmente é USD ${preco}`
     bot.sendMessage(chatId, mensagem);
