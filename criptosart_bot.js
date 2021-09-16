@@ -1,6 +1,7 @@
 const TelegramBot = require('node-telegram-bot-api');
 const axios = require('axios');
 var express = require('express');
+require('dotenv').config()
 // replace the value below with the Telegram token you receive from @BotFather
 const aws = require('aws-sdk');
 
