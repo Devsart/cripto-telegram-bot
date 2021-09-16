@@ -14,12 +14,17 @@ app.get('/', function(request, response) {
     console.log('App is running, server is listening on port ', app.get('port'));
     });
 
+app.post(`/${process.env.BOTTOKEN}`, (req, res) => {
+    bot.processUpdate(req.body);
+    res.status(200).json({ message: 'ok' });
+   });
+
 const token = process.env.BOTTOKEN;
 let bot;
 
 if (process.env.NODE_ENV === 'production') {
     bot = new TelegramBot(token);
-    bot.setWebHook(process.env.HEROKU_URL);
+    bot.setWebHook(process.env.HEROKU_URL + bot.token);
  } else {
     bot = new TelegramBot(token, { polling: true });
  }
