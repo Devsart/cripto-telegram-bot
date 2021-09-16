@@ -33,11 +33,19 @@ if (process.env.NODE_ENV === 'production') {
  }
 bot.onText(/\/preco (.+)/, async (msg, match) => {
   var nome = match[1];
-  getToken(nome);
 
   const chatId = msg.chat.id;
   try{
     const resp = await axios.get(`https://api.coingecko.com/api/v3/coins/${nome}`); // the captured "whatever"
+    if(resp.status != 200){
+        const resplist = await axios.get(`https://api.coingecko.com/api/v3/coins/list`);
+        resplist.data.forEach((x) => {
+            if(x.symbol == nome.toLowerCase()){
+                nome = x.id;
+            }
+        });
+        resp = await axios.get(`https://api.coingecko.com/api/v3/coins/${nome}`);
+    }
     var preco = resp.data.market_data.current_price.usd;
     var mensagem = `O preço de ${nome} atualmente é USD ${preco}`
     bot.sendMessage(chatId, mensagem);
@@ -64,7 +72,7 @@ bot.onText(/\/alerta (.+)/, async (msg, match) => {
                     nome = x.id;
                 }
             });
-            const resp = await axios.get(`https://api.coingecko.com/api/v3/coins/${nome}`);
+            resp = await axios.get(`https://api.coingecko.com/api/v3/coins/${nome}`);
         }
         var preco = resp.data.market_data.current_price.usd;
         var mensagem_inicial = `O atual preço de ${nome} é de USD ${preco}... Eu te avisarei quando o preço chegar a USD ${valor}!`
