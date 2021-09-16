@@ -33,7 +33,7 @@ if (process.env.NODE_ENV === 'production') {
  }
 bot.onText(/\/preco (.+)/, async (msg, match) => {
   var nome = match[1];
-  this.getToken(nome);
+  getToken(nome);
 
   const chatId = msg.chat.id;
   try{
@@ -53,7 +53,7 @@ bot.onText(/\/alerta (.+)/, async (msg, match) => {
     var moeda = match[1].split(' ');
     var nome = moeda[0];
     var valor = moeda[1];
-    this.getToken(nome);
+    getToken(nome);
 
     const chatId = msg.chat.id;
     try{
