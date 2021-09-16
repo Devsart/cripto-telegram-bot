@@ -15,6 +15,7 @@ app.get('/', function(request, response) {
     });
 
 const token = process.env.BOTTOKEN;
+let bot;
 
 if (process.env.NODE_ENV === 'production') {
     bot = new TelegramBot(token);
