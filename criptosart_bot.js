@@ -19,14 +19,14 @@ const token = process.env.BOTTOKEN;
 const bot = new TelegramBot(token, {polling: true});
 
 bot.onText(/\/preco (.+)/, async (msg, match) => {
-  var token = match[1];
+  var nome = match[1];
   equivalenciaNome(nome);
 
   const chatId = msg.chat.id;
   try{
-    const resp = await axios.get(`https://api.coingecko.com/api/v3/coins/${token}`); // the captured "whatever"
+    const resp = await axios.get(`https://api.coingecko.com/api/v3/coins/${nome}`); // the captured "whatever"
     var preco = resp.data.market_data.current_price.usd;
-    var mensagem = `O preço de ${match[1]} atualmente é USD ${preco}`
+    var mensagem = `O preço de ${nome} atualmente é USD ${preco}`
     bot.sendMessage(chatId, mensagem);
   }
   catch(e){
