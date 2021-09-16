@@ -1,10 +1,13 @@
 const TelegramBot = require('node-telegram-bot-api');
 const axios = require('axios');
 var express = require('express');
-require('dotenv').config()
+require('dotenv').config();
 // replace the value below with the Telegram token you receive from @BotFather
 
 var app = express();
+
+app.use(express.json());
+
 app.set('port', (process.env.PORT || 5000));
 
 app.get('/', function(request, response) {
