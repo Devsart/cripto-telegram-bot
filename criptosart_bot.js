@@ -20,43 +20,27 @@ const bot = new TelegramBot(token, {polling: true});
 
 bot.onText(/\/preco (.+)/, async (msg, match) => {
   var token = match[1];
-  switch(match[1]){
-      case ("pvu"||"PVU"):
-          token = "plant-vs-undead-token"
-          break;
-      case ("btc"||"BTC"):
-          token = "bitcoin"
-          break;
-      case ("ltc"||"LTC"):
-          token = "litecoin"
-          break;
-  }
+  equivalenciaNome(nome);
 
   const chatId = msg.chat.id;
-  const resp = await axios.get(`https://api.coingecko.com/api/v3/coins/${token}`); // the captured "whatever"
-  var preco = resp.data.market_data.current_price.usd;
-  var mensagem = `O preço de ${match[1]} atualmente é USD ${preco}`
-  bot.sendMessage(chatId, mensagem);
+  try{
+    const resp = await axios.get(`https://api.coingecko.com/api/v3/coins/${token}`); // the captured "whatever"
+    var preco = resp.data.market_data.current_price.usd;
+    var mensagem = `O preço de ${match[1]} atualmente é USD ${preco}`
+    bot.sendMessage(chatId, mensagem);
+  }
+  catch(e){
+    var mensagem_erro = `Desculpe, mas não consegui encontrar o token ${nome}. Por favor, verifique se há algum erro de digitação ou se o Token realmente existe.`
+    bot.sendMessage(chatId,mensagem_erro);
+    throw new Error("Whooops! parece que você tentou acessar algum token inexistente.")
+  }
 });
 
 bot.onText(/\/alerta (.+)/, async (msg, match) => {
     var moeda = match[1].split(' ');
     var nome = moeda[0];
     var valor = moeda[1];
-    switch(nome){
-        case ("pvu"||"PVU"):
-            nome = "plant-vs-undead-token"
-            break;
-        case ("btc"||"BTC"):
-            nome = "bitcoin"
-            break;
-        case ("ltc"||"LTC"):
-            nome = "litecoin"
-            break;
-        case ("xrp"||"XRP"):
-            nome = "ripple"
-            break;
-    }
+    equivalenciaNome(nome);
 
     const chatId = msg.chat.id;
     try{
@@ -97,4 +81,21 @@ bot.onText(/\/alerta (.+)/, async (msg, match) => {
         while(status_alerta_baixa)
     }
   });
+
+  function equivalenciaNome(nome){
+    switch(nome){
+        case ("pvu"||"PVU"):
+            nome = "plant-vs-undead-token"
+            break;
+        case ("btc"||"BTC"):
+            nome = "bitcoin"
+            break;
+        case ("ltc"||"LTC"):
+            nome = "litecoin"
+            break;
+        case ("xrp"||"XRP"):
+            nome = "ripple"
+            break;
+    }
+  }
 
