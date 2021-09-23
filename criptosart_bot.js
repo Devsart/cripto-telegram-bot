@@ -72,9 +72,17 @@ bot.onText(/\/lista (.+)/, async (msg, match) => {
       var user_id = msg.from.id;
       var cripto_list = lista.split(' ');
       var precos_list = [];
+      console.log(cripto_list);
       cripto_list.forEach(async x =>{ 
-          const resp = await axios.get(`https://api.coingecko.com/api/v3/coins/${x}`)
-          var preco = resp.data.market_data.current_price.usd; 
+          console.log(x);
+          const resp = await axios.get(`https://api.coingecko.com/api/v3/coins/${x}`).catch(
+            function (error) {
+              console.log('Show error notification!')
+              return Promise.reject(error)
+            }
+          )
+          var preco = resp.data.market_data.current_price.usd;
+          console.log(preco);
           precos_list.push(preco)});
       var usuario = null
       client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`, (err, res) => {
@@ -97,7 +105,7 @@ bot.onText(/\/lista (.+)/, async (msg, match) => {
       bot.sendMessage(chatId, mensagem);
     }
     catch(e){
-      var mensagem_erro = `Desculpe, mas não consegui encontrar o token ${nome}. Por favor, verifique se há algum erro de digitação ou se o Token realmente existe.`
+      var mensagem_erro = `Desculpe, mas não consegui encontrar o token. Por favor, verifique se há algum erro de digitação ou se o Token realmente existe.`
       bot.sendMessage(chatId,mensagem_erro);
       throw new Error("Whooops! parece que você tentou acessar algum token inexistente.")
     }
