@@ -66,14 +66,11 @@ bot.onText(/\/preço (.+)/, async (msg, match) => {
 
 bot.onText(/\/lista (.+)/, async (msg, match) => {
     var lista = match[1];
-    var usuario;
     const chatId = msg.chat.id;
     try{
       var user_id = msg.from.id;
-      client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`, (err, res) => {
+      var usuario = client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`, (err, res) => {
         if (err) throw err;
-        usuario = res.rows[0]
-        console.log(usuario);
       });
       var cripto_list = lista.split(' ');
       var precos_list = [];
