@@ -99,6 +99,7 @@ bot.onText(/\/lista (.+)/, async (msg, match) => {
       else{
         client.query(`UPDATE tb_criptolist SET cripto_list = '${cripto_list}',precos_list ='${precos_list}' WHERE user_id = '${user_id}');`, (err, res) => {
             if (err) throw err;
+            console.log('Deu merda no update')
           });
       }
       var mensagem = `O preço de  atualmente é USD ${preco}`
