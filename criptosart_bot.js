@@ -131,7 +131,7 @@ bot.onText(/\/monitorar/, async (msg, match) => {
             mensagem+=" 🔴\n"
           }
         }
-        mensagem += "\nEstá gostando? Nos ajude a manter o [projeto](https://github.com/Devsart/cripto-telegram-bot), use o comando /doar."
+        mensagem += "\nEstá gostando? Nos ajude a manter o projeto, use o comando /doar."
         bot.sendMessage(chatId, mensagem, { parse_mode: 'Markdown' });
       }
       else{
