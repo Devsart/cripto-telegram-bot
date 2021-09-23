@@ -100,7 +100,7 @@ bot.onText(/\/listar (.+)/, async (msg, match) => {
         }    
       });
       var mensagem = `Sua lista de criptoativos foi atualizada 🤗. Para verificá-los basta enviar /monitorar`
-      bot.sendMessage(chatId, mensagem, { parseMode: 'Markdown' });
+      bot.sendMessage(chatId, mensagem, { parse_mode: 'Markdown' });
     }
     catch(e){
       var mensagem_erro = `Desculpe, mas não consegui encontrar o token. Por favor, verifique se há algum erro de digitação ou se o Token realmente existe.`
@@ -109,7 +109,7 @@ bot.onText(/\/listar (.+)/, async (msg, match) => {
     }
   });
 
-bot.onText(/\/monitorar (.+)/, async (msg, match) => {
+bot.onText(/\/monitorar/, async (msg, match) => {
   const chatId = msg.chat.id;
   var user_id = msg.from.id;
   try{
@@ -123,7 +123,7 @@ bot.onText(/\/monitorar (.+)/, async (msg, match) => {
         var mensagem = `Bem-vind@ **${msg.from.first_name}**! Aqui está o relatório da sua lista de criptoativos 📈:\n\n`
         for([index,cripto] of user_list.entries()){
           var sinal = Math.sign(list_precos[index]/user_precos[index] -1) >= 0 ? "+" : "-";
-          mensagem += `- ${cripto} - USD ${list_precos[index]} (${sinal}${list_precos[index]/user_precos[index] -1})`;
+          mensagem += `- ${cripto} - USD ${list_precos[index]} (${sinal}${Math.round((list_precos[index]/user_precos[index] -1 +Number.EPSILON)*10000)/100}%)`;
           if(sinal == "+"){
             mensagem+=" 🟢\n"
           }
@@ -132,11 +132,11 @@ bot.onText(/\/monitorar (.+)/, async (msg, match) => {
           }
         }
         mensagem += "\nEstá gostando? Nos ajude a manter o projeto, use o comando /doar."
-        bot.sendMessage(chatId, mensagem, { parseMode: 'Markdown' });
+        bot.sendMessage(chatId, mensagem, { parse_mode: 'Markdown' });
       }
       else{
         var mensagem = `Hmmm... Parece que você ainda não tem uma lista de criptoativos 🤔. Você pode criar uma usando o comando /listar`
-        bot.sendMessage(chatId, mensagem, { parseMode: 'Markdown' });
+        bot.sendMessage(chatId, mensagem, { parse_mode: 'Markdown' });
       }
     })
   }
