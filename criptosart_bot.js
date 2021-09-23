@@ -71,8 +71,11 @@ bot.onText(/\/lista (.+)/, async (msg, match) => {
     try{
       var user_id = msg.from.id;
       var cripto_list = lista.split(' ');
-      const resp = await axios.get(`https://api.coingecko.com/api/v3/coins/${cripto_list[0]}`)
-      var preco = resp.data.market_data.current_price.usd;
+      var precos_list = [];
+      cripto_list.foreach(x =>{ 
+          const resp = await axios.get(`https://api.coingecko.com/api/v3/coins/${x}`)
+          var preco = resp.data.market_data.current_price.usd; 
+          precos_list.push(preco)});
       var usuario = null
       client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`, (err, res) => {
         if (err) throw err;
@@ -83,12 +86,14 @@ bot.onText(/\/lista (.+)/, async (msg, match) => {
       if(usuario == null){
         client.query(`INSERT INTO tb_criptolist VALUES ('${user_id}','${cripto_list}','${preco}');`, (err, res) => {
             if (err) throw err;
-            for (let row of res.rows) {
-                usuario = row;
-            }
           });
       }
-      var mensagem = `O preço de ${nome} atualmente é USD ${preco}`
+      else{
+        client.query(`UPDATE tb_criptolist SET cripto_list = '${cripto_list}',precos_list ='${precos_list}' WHERE user_id = '${user_id}');`, (err, res) => {
+            if (err) throw err;
+          });
+      }
+      var mensagem = `O preço de  atualmente é USD ${preco}`
       bot.sendMessage(chatId, mensagem);
     }
     catch(e){
