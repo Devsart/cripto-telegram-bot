@@ -168,13 +168,10 @@ bot.onText(/\/alerta (.+)/, async (msg, match) => {
   }
 
 async function getUsuario(user_id){
-  let usuario;
   client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`, async (err, res) => {
-    usuario = res.rowCount;
-    await res.rowCount;
+    if(res)  
+      return res.rowCount;
     if (err) 
       throw err;
   });
-  console.log(usuario)
-  return usuario; 
 }
