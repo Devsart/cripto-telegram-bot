@@ -131,12 +131,12 @@ bot.onText(/\/monitorar/, async (msg, match) => {
             mensagem+=" 🔴\n"
           }
         }
-        mensagem += "\nEstá gostando? Nos ajude a manter o projeto, use o comando /doar."
-        bot.sendMessage(chatId, mensagem, parse_mode = 'Markdown');
+        mensagem += "\nEstá gostando? Nos ajude a manter o [projeto](https://github.com/Devsart/cripto-telegram-bot), use o comando /doar."
+        bot.sendMessage(chatId, mensagem, { parse_mode: 'Markdown' });
       }
       else{
         var mensagem = `Hmmm... Parece que você ainda não tem uma lista de criptoativos 🤔. Você pode criar uma usando o comando /listar`
-        bot.sendMessage(chatId, mensagem, parse_mode = 'Markdown');
+        bot.sendMessage(chatId, mensagem, { parse_mode: 'Markdown' });
       }
     })
   }
