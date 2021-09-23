@@ -81,13 +81,23 @@ bot.onText(/\/lista (.+)/, async (msg, match) => {
       var cripto_list = lista.split(' ');
       const resp = await axios.get(`https://api.coingecko.com/api/v3/coins/${cripto_list[0]}`)
       var preco = resp.data.market_data.current_price.usd;
-      client.query('SELECT table_schema,table_name FROM public.;', (err, res) => {
+      var usuario = null
+      client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`, (err, res) => {
         if (err) throw err;
         for (let row of res.rows) {
-          console.log(JSON.stringify(row));
+            usuario = row;
         }
         client.end();
       });
+      if(usuario == null){
+        client.query(`INSERT INTO tb_criptolist VALUES ('${user_id}','${cripto_list}','${preco}');`, (err, res) => {
+            if (err) throw err;
+            for (let row of res.rows) {
+                usuario = row;
+            }
+            client.end();
+          });
+      }
       var mensagem = `O preço de ${nome} atualmente é USD ${preco}`
       bot.sendMessage(chatId, mensagem);
     }
@@ -148,34 +158,3 @@ bot.onText(/\/alerta (.+)/, async (msg, match) => {
         while(status_alerta_baixa)
     }
   });
-
-  function equivalenciaNome(nome){
-    switch(nome){
-        case ("pvu"||"PVU"):
-            nome = "plant-vs-undead-token"
-            break;
-        case ("btc"||"BTC"):
-            nome = "bitcoin"
-            break;
-        case ("ltc"||"LTC"):
-            nome = "litecoin"
-            break;
-        case ("xrp"||"XRP"):
-            nome = "ripple"
-            break;
-    }
-  }
-  async function getToken(symbol){
-    try{
-        const resp = await axios.get(`https://api.coingecko.com/api/v3/coins/list`);
-        resp.data.forEach((x) => {
-            if(x.symbol == symbol.toLowerCase()){
-                symbol = x.id;
-            }
-        });
-        console.log(symbol);
-    }
-    catch(e){
-        console.log(e.message)    
-        }
-    }
