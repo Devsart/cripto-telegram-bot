@@ -81,6 +81,12 @@ bot.onText(/\/listar (.+)/, async (msg, match) => {
           var user_list = res.rows[0].cripto_list.split(',');
           var user_precos = res.rows[0].precos_list.split(',');
           for([index,cripto] of cripto_list.entries()){
+            const resplist = await axios.get(`https://api.coingecko.com/api/v3/coins/list`);
+                resplist.data.forEach((x) => {
+            if(x.symbol == cripto.toLowerCase()){
+                cripto = x.id;
+              }
+            });
             if(user_list.indexOf(cripto)==-1){
               user_list.push(cripto);
               user_precos.push(precos_list[index]);
@@ -122,8 +128,14 @@ bot.onText(/\/monitorar/, async (msg, match) => {
         const list_precos = await getPrices(user_list);
         var mensagem = `Bem-vind@ *${msg.from.first_name}*! Aqui está o relatório da sua lista de criptoativos 📈:\n\n`
         for([index,cripto] of user_list.entries()){
+          const resplist = await axios.get(`https://api.coingecko.com/api/v3/coins/list`);
+                resplist.data.forEach((x) => {
+            if(x.id == cripto.toLowerCase()){
+                cripto = x.symbol;
+              }
+            });
           var sinal = Math.sign(list_precos[index]/user_precos[index] -1) >= 0 ? "+" : "-";
-          mensagem += ` • *${cripto.toUpperCase()}:*\n   • *Preço de Compra:* US$ ${user_precos[index]}\n   • *Preço Atual:* US$ ${list_precos[index]} (${sinal}${Math.round((list_precos[index]/user_precos[index] -1 +Number.EPSILON)*10000)/100}%)`;
+          mensagem += ` 🔸 *${cripto.toUpperCase()}:*\n     • *Preço de Compra:* US$ ${user_precos[index]}\n    • *Preço Atual:* US$ ${list_precos[index]} (${sinal}${Math.round((list_precos[index]/user_precos[index] -1 +Number.EPSILON)*10000)/100}%)`;
           if(sinal == "+"){
             mensagem+=" 🟢\n"
           }
@@ -144,6 +156,7 @@ bot.onText(/\/monitorar/, async (msg, match) => {
 
   }
 });
+
 
 bot.onText(/\/alerta (.+)/, async (msg, match) => {
     var moeda = match[1].split(' ');
