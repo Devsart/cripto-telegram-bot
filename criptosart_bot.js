@@ -78,8 +78,8 @@ bot.onText(/\/listar (.+)/, async (msg, match) => {
         if (err) 
           throw err;
         else if(res.rowCount>=1) {
-          var user_list = res.row[0].cripto_list.split(',');
-          var user_precos = res.row[0].precos_list.split(',');
+          var user_list = res.rows[0].cripto_list.split(',');
+          var user_precos = res.rows[0].precos_list.split(',');
           for([index,cripto] of cripto_list.entries()){
             if(user_list.indexOf(cripto)==-1){
               user_list.push(cripto);
