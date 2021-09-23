@@ -76,7 +76,7 @@ bot.onText(/\/listar (.+)/, async (msg, match) => {
       console.log(cripto_list);
       console.log(precos_list);
       console.log("checkpoint: " + usuario);
-      if(usuario == null){
+      if(usuario <= 0){
         console.log('Deu merda no Insert')
         client.query(`INSERT INTO tb_criptolist VALUES ('${user_id}','${cripto_list}','${precos_list}');`, (err, res) => {
             if (err) throw err;
@@ -171,7 +171,8 @@ async function getUsuario(user_id){
   await client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`, (err, res) => {
     if (err) 
       throw err;
-    usuario = res.rows[0];
+    usuario = res.rowCount;
+    console.log(res);
   });
   console.log(usuario)
   return usuario; 
