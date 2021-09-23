@@ -154,9 +154,9 @@ bot.onText(/\/alerta (.+)/, async (msg, match) => {
 
   async function getPrices(cripto_list){
     var precos_list = []
-    cripto_list.forEach (x => { 
+    cripto_list.forEach (async x => { 
       console.log(x);
-      axios.get(`https://api.coingecko.com/api/v3/coins/${x}`).then(
+      await axios.get(`https://api.coingecko.com/api/v3/coins/${x}`).then(
         response => {
           var preco = response.data.market_data.current_price.usd;
           console.log(preco);
@@ -169,11 +169,10 @@ bot.onText(/\/alerta (.+)/, async (msg, match) => {
   }
 
 async function getUsuario(user_id){
-  let usuario;
-  await client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`, (err, res) => {
+  client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`, (err, res) => {
     if (err) 
       throw err;
-    usuario = res.rowCount;
+    this.usuario = res.rowCount;
   });
   console.log(usuario)
   return usuario; 
