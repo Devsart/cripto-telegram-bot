@@ -99,8 +99,8 @@ bot.onText(/\/listar (.+)/, async (msg, match) => {
           });
         }    
       });
-      var mensagem = `Sua lista de criptoativos foi atualizada. Para verificá-los basta enviar /monitorar`
-      bot.sendMessage(chatId, mensagem);
+      var mensagem = `Sua lista de criptoativos foi atualizada 🤗. Para verificá-los basta enviar /monitorar`
+      bot.sendMessage(chatId, mensagem, { parseMode: 'Markdown' });
     }
     catch(e){
       var mensagem_erro = `Desculpe, mas não consegui encontrar o token. Por favor, verifique se há algum erro de digitação ou se o Token realmente existe.`
@@ -108,6 +108,42 @@ bot.onText(/\/listar (.+)/, async (msg, match) => {
       throw new Error("Whooops! parece que você tentou acessar algum token inexistente.")
     }
   });
+
+bot.onText(/\/monitorar (.+)/, async (msg, match) => {
+  const chatId = msg.chat.id;
+  var user_id = msg.from.id;
+  try{
+    client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`, (err, res) => {
+      if (err) 
+        throw err;
+      else if(res.rowCount>=1) {
+        var user_list = res.rows[0].cripto_list.split(',');
+        var user_precos = res.rows[0].precos_list.split(',');
+        var list_precos = await getPrices(user_list);
+        var mensagem = `Bem-vind@ **${msg.from.first_name}**! Aqui está o relatório da sua lista de criptoativos 📈:\n\n`
+        for([index,cripto] of user_list.entries()){
+          var sinal = Math.sign(list_precos[index]/user_precos[index] -1) >= 0 ? "+" : "-";
+          mensagem += `- ${cripto} - USD ${list_precos[index]} (${sinal}${list_precos[index]/user_precos[index] -1})`;
+          if(sinal == "+"){
+            mensagem+=" 🟢\n"
+          }
+          else{
+            mensagem+=" 🔴\n"
+          }
+        }
+        mensagem += "\nEstá gostando? Nos ajude a manter o projeto, use o comando /doar."
+        bot.sendMessage(chatId, mensagem, { parseMode: 'Markdown' });
+      }
+      else{
+        var mensagem = `Hmmm... Parece que você ainda não tem uma lista de criptoativos 🤔. Você pode criar uma usando o comando /listar`
+        bot.sendMessage(chatId, mensagem, { parseMode: 'Markdown' });
+      }
+    })
+  }
+  catch(err){
+
+  }
+});
 
 bot.onText(/\/alerta (.+)/, async (msg, match) => {
     var moeda = match[1].split(' ');
