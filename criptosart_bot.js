@@ -120,7 +120,7 @@ bot.onText(/\/monitorar/, async (msg, match) => {
         var user_list = res.rows[0].cripto_list.split(',');
         var user_precos = res.rows[0].precos_list.split(',');
         const list_precos = await getPrices(user_list);
-        var mensagem = `Bem-vind@ **${msg.from.first_name}**! Aqui está o relatório da sua lista de criptoativos 📈:\n\n`
+        var mensagem = `Bem-vind@ *${msg.from.first_name}*! Aqui está o relatório da sua lista de criptoativos 📈:\n\n`
         for([index,cripto] of user_list.entries()){
           var sinal = Math.sign(list_precos[index]/user_precos[index] -1) >= 0 ? "+" : "-";
           mensagem += `- ${cripto} - USD ${list_precos[index]} (${sinal}${Math.round((list_precos[index]/user_precos[index] -1 +Number.EPSILON)*10000)/100}%)`;
@@ -132,11 +132,11 @@ bot.onText(/\/monitorar/, async (msg, match) => {
           }
         }
         mensagem += "\nEstá gostando? Nos ajude a manter o projeto, use o comando /doar."
-        bot.sendMessage(chatId, mensagem, { parse_mode: 'Markdown' });
+        bot.sendMessage(chatId, mensagem, parse_mode = telegram.ParseMode.MARKDOWN);
       }
       else{
         var mensagem = `Hmmm... Parece que você ainda não tem uma lista de criptoativos 🤔. Você pode criar uma usando o comando /listar`
-        bot.sendMessage(chatId, mensagem, { parse_mode: 'Markdown' });
+        bot.sendMessage(chatId, mensagem, parse_mode = telegram.ParseMode.MARKDOWN);
       }
     })
   }
