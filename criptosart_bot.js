@@ -88,7 +88,6 @@ bot.onText(/\/listar (.+)/, async (msg, match) => {
             if (err){
               throw err;
             }
-            console.log(res);
             
           });
       }
@@ -175,7 +174,6 @@ async function getUsuario(user_id){
     if (err) 
       throw err;
     usuario = res.rowCount;
-    console.log(res);
   });
   console.log(usuario)
   return usuario; 
