@@ -113,7 +113,7 @@ bot.onText(/\/monitorar (.+)/, async (msg, match) => {
   const chatId = msg.chat.id;
   var user_id = msg.from.id;
   try{
-    client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`, (err, res) => {
+    client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`,async (err, res) => {
       if (err) 
         throw err;
       else if(res.rowCount>=1) {
