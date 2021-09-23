@@ -73,9 +73,9 @@ bot.onText(/\/lista (.+)/, async (msg, match) => {
       var cripto_list = lista.split(' ');
       var precos_list = [];
       console.log(cripto_list);
-      cripto_list.forEach(async x =>{ 
+      cripto_list.forEach(x =>{ 
           console.log(x);
-          const resp = await axios.get(`https://api.coingecko.com/api/v3/coins/${x}`).catch(
+          const resp = axios.get(`https://api.coingecko.com/api/v3/coins/${x}`).catch(
             function (error) {
               console.log('Show error notification!')
               return Promise.reject(error)
