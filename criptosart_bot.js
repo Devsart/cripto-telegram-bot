@@ -3,7 +3,7 @@ const axios = require('axios');
 var express = require('express');
 require('dotenv').config();
 const { Client } = require('pg');
-const { Axios } =  require('axios-observable');
+// const { Axios } =  require('axios-observable');
 // replace the value below with the Telegram token you receive from @BotFather
 
 const client = new Client({
@@ -81,7 +81,7 @@ bot.onText(/\/listar (.+)/, (msg, match) => {
       console.log(cripto_list);
       cripto_list.forEach (x => { 
           console.log(x);
-          Axios.get(`https://api.coingecko.com/api/v3/coins/${x}`).subscribe(
+          axios.get(`https://api.coingecko.com/api/v3/coins/${x}`).subscribe(
             {next: () =>{
               var preco = response.data.market_data.current_price.usd;
               console.log(preco);
