@@ -78,7 +78,15 @@ bot.onText(/\/listar (.+)/, async (msg, match) => {
         if (err) 
           throw err;
         else if(res.rowCount>=1) {
-          client.query(`UPDATE tb_criptolist SET cripto_list = '${cripto_list}',precos_list ='${precos_list}' WHERE user_id = '${user_id}';`, (err, res) => {
+          var user_list = res.row[0].cripto_list.split(',');
+          var user_precos = res.row[0].precos_list.split(',');
+          for([index,cripto] of cripto_list.entries()){
+            if(user_list.indexOf(cripto)==-1){
+              user_list.push(cripto);
+              user_precos.push(precos_list[index]);
+            }
+          }
+          client.query(`UPDATE tb_criptolist SET cripto_list = '${user_list}',precos_list ='${user_precos}' WHERE user_id = '${user_id}';`, (err, res) => {
             if (err){
               throw err;
             }
