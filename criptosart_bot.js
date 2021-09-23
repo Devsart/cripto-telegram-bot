@@ -65,14 +65,14 @@ bot.onText(/\/preço (.+)/, async (msg, match) => {
   }
 });
 
-bot.onText(/\/listar (.+)/, (msg, match) => {
+bot.onText(/\/listar (.+)/, async (msg, match) => {
     var lista = match[1];
     const chatId = msg.chat.id;
     try{
       var user_id = msg.from.id;
-      var usuario = getUsuario(user_id);
+      var usuario = await getUsuario(user_id);
       var cripto_list = lista.split(' ');
-      var precos_list = getPrices(cripto_list);
+      var precos_list = await getPrices(cripto_list);
       console.log(cripto_list);
       console.log(precos_list);
       console.log("checkpoint: " + usuario);
