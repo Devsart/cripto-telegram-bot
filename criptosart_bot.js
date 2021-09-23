@@ -73,9 +73,9 @@ bot.onText(/\/lista (.+)/, async (msg, match) => {
       var cripto_list = lista.split(' ');
       var precos_list = [];
       console.log(cripto_list);
-      for (var x in cripto_list){ 
+      cripto_list.forEach (async (x) => { 
           console.log(x);
-          const resp = axios.get(`https://api.coingecko.com/api/v3/coins/${x}`).catch(
+          const resp = await axios.get(`https://api.coingecko.com/api/v3/coins/${x}`).catch(
             function (error) {
               console.log('Show error notification!')
               return Promise.reject(error)
@@ -83,8 +83,9 @@ bot.onText(/\/lista (.+)/, async (msg, match) => {
           var preco = resp.data.market_data.current_price.usd;
           console.log(preco);
           precos_list.push(preco)
-        };
+        });
       var usuario = null
+      console.log("checkpoint");
       client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`, (err, res) => {
         if (err) throw err;
         for (let row of res.rows) {
