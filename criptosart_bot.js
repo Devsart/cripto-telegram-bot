@@ -91,7 +91,7 @@ bot.onText(/\/lista (.+)/, async (msg, match) => {
           console.log(preco);
           precos_list.push(preco)
         });
-      console.log("checkpoint");
+      console.log("checkpoint: " + usuario);
       if(usuario == null){
         console.log('Deu merda no Insert')
         client.query(`INSERT INTO tb_criptolist VALUES ('${user_id}','${cripto_list}','${precos_list}');`, (err, res) => {
