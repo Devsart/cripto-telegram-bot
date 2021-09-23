@@ -3,6 +3,7 @@ const axios = require('axios');
 var express = require('express');
 require('dotenv').config();
 const { Client } = require('pg');
+import Axios from  'axios-observable';
 // replace the value below with the Telegram token you receive from @BotFather
 
 const client = new Client({
@@ -64,29 +65,29 @@ bot.onText(/\/preço (.+)/, async (msg, match) => {
   }
 });
 
-bot.onText(/\/lista (.+)/, async (msg, match) => {
+bot.onText(/\/listar (.+)/, (msg, match) => {
     var lista = match[1];
+    const usuario;
     const chatId = msg.chat.id;
     try{
       var user_id = msg.from.id;
-      var usuario = client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`, (err, res) => {
-        if (err) throw err;
+      client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`, (err, res) => {
+        if (err) 
+          throw err;
+        usuario = res.rows[0];
       });
       var cripto_list = lista.split(' ');
       var precos_list = [];
       console.log(cripto_list);
-      cripto_list.forEach (async (x) => { 
+      cripto_list.forEach (x => { 
           console.log(x);
-          await axios.get(`https://api.coingecko.com/api/v3/coins/${x}`).then((y) =>
-            {
-              var preco = y.data.market_data.current_price.usd;
+          Axios.get(`https://api.coingecko.com/api/v3/coins/${x}`).subscribe(
+            {next: () =>{
+              var preco = response.data.market_data.current_price.usd;
               console.log(preco);
               precos_list.push(preco);
-            }).catch(
-            function (error) {
-              console.log('Show error notification!')
-              return Promise.reject(error)
-            });
+            },
+            error: console.log(error)});
         });
       console.log("checkpoint: " + usuario);
       if(usuario == null){
