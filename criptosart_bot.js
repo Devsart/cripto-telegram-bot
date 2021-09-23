@@ -67,28 +67,14 @@ bot.onText(/\/preço (.+)/, async (msg, match) => {
 
 bot.onText(/\/listar (.+)/, (msg, match) => {
     var lista = match[1];
-    let usuario;
     const chatId = msg.chat.id;
     try{
       var user_id = msg.from.id;
-      client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`, (err, res) => {
-        if (err) 
-          throw err;
-        usuario = res.rows[0];
-      });
+      var usuario = getUsuario(user_id);
       var cripto_list = lista.split(' ');
-      var precos_list = [];
+      var precos_list = getPrices(cripto_list);
       console.log(cripto_list);
-      cripto_list.forEach (x => { 
-          console.log(x);
-          axios.get(`https://api.coingecko.com/api/v3/coins/${x}`).then(
-            response => {
-              var preco = response.data.market_data.current_price.usd;
-              console.log(preco);
-              precos_list.push(preco.toString());
-            },
-            error => console.log(error));
-        });
+      console.log(precos_list);
       console.log("checkpoint: " + usuario);
       if(usuario == null){
         console.log('Deu merda no Insert')
@@ -163,3 +149,30 @@ bot.onText(/\/alerta (.+)/, async (msg, match) => {
         while(status_alerta_baixa)
     }
   });
+
+  async function getPrices(cripto_list){
+    var precos_list = []
+    await cripto_list.forEach (x => { 
+      console.log(x);
+      axios.get(`https://api.coingecko.com/api/v3/coins/${x}`).then(
+        response => {
+          var preco = response.data.market_data.current_price.usd;
+          console.log(preco);
+          precos_list.push(preco.toString());
+        },
+        error => console.log(error));
+    });
+    console.log(precos_list);
+    return precos_list;
+  }
+
+async function getUsuario(user_id){
+  let usuario;
+  await client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`, (err, res) => {
+    if (err) 
+      throw err;
+    usuario = res.rows[0];
+  });
+  console.log(usuario)
+  return usuario; 
+}
