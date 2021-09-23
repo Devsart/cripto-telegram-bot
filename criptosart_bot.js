@@ -85,7 +85,10 @@ bot.onText(/\/listar (.+)/, async (msg, match) => {
       else{
         console.log('Deu merda no update')
         client.query(`UPDATE tb_criptolist SET cripto_list = '${cripto_list}',precos_list ='${precos_list}' WHERE user_id = '${user_id}');`, (err, res) => {
-            if (err) throw err;
+            if (err){
+              throw err;
+            }
+            console.log(res);
             
           });
       }
