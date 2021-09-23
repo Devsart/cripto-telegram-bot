@@ -119,7 +119,7 @@ bot.onText(/\/monitorar (.+)/, async (msg, match) => {
       else if(res.rowCount>=1) {
         var user_list = res.rows[0].cripto_list.split(',');
         var user_precos = res.rows[0].precos_list.split(',');
-        var list_precos = await getPrices(user_list);
+        const list_precos = await getPrices(user_list);
         var mensagem = `Bem-vind@ **${msg.from.first_name}**! Aqui está o relatório da sua lista de criptoativos 📈:\n\n`
         for([index,cripto] of user_list.entries()){
           var sinal = Math.sign(list_precos[index]/user_precos[index] -1) >= 0 ? "+" : "-";
