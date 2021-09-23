@@ -132,11 +132,11 @@ bot.onText(/\/monitorar/, async (msg, match) => {
           }
         }
         mensagem += "\nEstá gostando? Nos ajude a manter o projeto, use o comando /doar."
-        bot.sendMessage(chatId, mensagem, parse_mode = telegram.ParseMode.MARKDOWN);
+        bot.sendMessage(chatId, mensagem, parse_mode = 'Markdown');
       }
       else{
         var mensagem = `Hmmm... Parece que você ainda não tem uma lista de criptoativos 🤔. Você pode criar uma usando o comando /listar`
-        bot.sendMessage(chatId, mensagem, parse_mode = telegram.ParseMode.MARKDOWN);
+        bot.sendMessage(chatId, mensagem, parse_mode = 'Markdown');
       }
     })
   }
