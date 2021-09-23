@@ -72,7 +72,7 @@ bot.onText(/\/lista (.+)/, async (msg, match) => {
       var user_id = msg.from.id;
       var cripto_list = lista.split(' ');
       var precos_list = [];
-      cripto_list.foreach(x =>{ 
+      cripto_list.foreach(async x =>{ 
           const resp = await axios.get(`https://api.coingecko.com/api/v3/coins/${x}`)
           var preco = resp.data.market_data.current_price.usd; 
           precos_list.push(preco)});
