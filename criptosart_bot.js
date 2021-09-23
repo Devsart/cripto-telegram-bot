@@ -14,6 +14,14 @@ const client = new Client({
 
 client.connect();
 
+client.query('SELECT * FROM tb_criptolist;', (err, res) => {
+    if (err) throw err;
+    for (let row of res.rows) {
+      console.log(JSON.stringify(row));
+    }
+    client.end();
+  });
+
 var app = express();
 
 app.use(express.json());
@@ -73,7 +81,7 @@ bot.onText(/\/lista (.+)/, async (msg, match) => {
       var cripto_list = lista.split(' ');
       const resp = await axios.get(`https://api.coingecko.com/api/v3/coins/${cripto_list[0]}`)
       var preco = resp.data.market_data.current_price.usd;
-      client.query(`INSERT into public.tb_criptolist (user_id,cripto_list,precos_list) VALUES (${user_id},${cripto_list[0]},${preco});`, (err, res) => {
+      client.query('SELECT table_schema,table_name FROM public.;', (err, res) => {
         if (err) throw err;
         for (let row of res.rows) {
           console.log(JSON.stringify(row));
