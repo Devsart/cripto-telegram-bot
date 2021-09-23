@@ -82,10 +82,10 @@ bot.onText(/\/listar (.+)/, (msg, match) => {
       cripto_list.forEach (x => { 
           console.log(x);
           axios.get(`https://api.coingecko.com/api/v3/coins/${x}`).subscribe(
-            {next: () =>{
+            {complete: () =>{
               var preco = response.data.market_data.current_price.usd;
               console.log(preco);
-              precos_list.push(preco);
+              precos_list.push(preco.toString());
             },
             error: console.log(error)});
         });
