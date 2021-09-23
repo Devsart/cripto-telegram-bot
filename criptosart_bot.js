@@ -172,7 +172,7 @@ async function getUsuario(user_id){
   client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`, (err, res) => {
     if (err) 
       throw err;
-    this.usuario = res.rowCount;
+    usuario = res.rowCount;
   });
   console.log(usuario)
   return usuario; 
