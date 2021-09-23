@@ -67,7 +67,7 @@ bot.onText(/\/preço (.+)/, async (msg, match) => {
 
 bot.onText(/\/listar (.+)/, (msg, match) => {
     var lista = match[1];
-    const usuario;
+    let usuario;
     const chatId = msg.chat.id;
     try{
       var user_id = msg.from.id;
