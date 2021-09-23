@@ -68,11 +68,11 @@ bot.onText(/\/preço (.+)/, async (msg, match) => {
 bot.onText(/\/listar (.+)/, async (msg, match) => {
     var lista = match[1];
     const chatId = msg.chat.id;
-    var user_id = msg.from.id;
-    const usuario = await getUsuario(user_id);
-    var cripto_list = lista.split(' ');
-    const precos_list = await getPrices(cripto_list);
     try{
+      var user_id = msg.from.id;
+      const usuario = await getUsuario(user_id);
+      var cripto_list = lista.split(' ');
+      const precos_list = await getPrices(cripto_list);
       console.log(cripto_list);
       console.log(precos_list);
       console.log("checkpoint: " + usuario);
@@ -154,25 +154,26 @@ bot.onText(/\/alerta (.+)/, async (msg, match) => {
 
   async function getPrices(cripto_list){
     var precos_list = []
-    cripto_list.forEach (async x => { 
-      console.log(x);
-      await axios.get(`https://api.coingecko.com/api/v3/coins/${x}`).then(
+    for(const cripto in cripto_list) {
+      await axios.get(`https://api.coingecko.com/api/v3/coins/${cripto}`).then(
         response => {
           var preco = response.data.market_data.current_price.usd;
           console.log(preco);
           precos_list.push(preco);
         },
         error => console.log(error));
-    });
+    };
     console.log(precos_list);
     return precos_list;
   }
 
 async function getUsuario(user_id){
-  client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`, (err, res) => {
+  let usuario;
+  client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`, async (err, res) => {
+    usuario = res.rowCount;
+    await res.rowCount;
     if (err) 
       throw err;
-    usuario = res.rowCount;
   });
   console.log(usuario)
   return usuario; 
