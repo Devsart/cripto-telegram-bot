@@ -3,7 +3,7 @@ const axios = require('axios');
 var express = require('express');
 require('dotenv').config();
 const { Client } = require('pg');
-import Axios from  'axios-observable';
+const { Axios } =  require('axios-observable');
 // replace the value below with the Telegram token you receive from @BotFather
 
 const client = new Client({
