@@ -70,28 +70,28 @@ bot.onText(/\/listar (.+)/, async (msg, match) => {
     const chatId = msg.chat.id;
     try{
       var user_id = msg.from.id;
-      const usuario = await getUsuario(user_id);
       var cripto_list = lista.split(' ');
       const precos_list = await getPrices(cripto_list);
       console.log(cripto_list);
       console.log(precos_list);
-      console.log("checkpoint: " + usuario);
-      if(usuario <= 0){
-        console.log('Deu merda no Insert')
-        client.query(`INSERT INTO tb_criptolist VALUES ('${user_id}','${cripto_list}','${precos_list}');`, (err, res) => {
-            if (err) throw err;
-          });
-      }
-      else{
-        console.log('Deu merda no update')
-        client.query(`UPDATE tb_criptolist SET cripto_list = '${cripto_list}',precos_list ='${precos_list}' WHERE user_id = '${user_id}';`, (err, res) => {
+      client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`, (err, res) => {
+        if (err) 
+          throw err;
+        else if(res.rowCount>=1) {
+          client.query(`UPDATE tb_criptolist SET cripto_list = '${cripto_list}',precos_list ='${precos_list}' WHERE user_id = '${user_id}';`, (err, res) => {
             if (err){
               throw err;
             }
-            
+            console.log(`tabela atualizada para usuário ${user_id}`)            
+          })
+        }
+        else{
+          client.query(`INSERT INTO tb_criptolist VALUES ('${user_id}','${cripto_list}','${precos_list}');`, (err, res) => {
+            if (err) throw err;
           });
-      }
-      var mensagem = `O preço de  atualmente é USD ${preco}`
+        }    
+      });
+      var mensagem = `Sua lista de criptoativos foi atualizada. Para verificá-los basta enviar /monitorar`
       bot.sendMessage(chatId, mensagem);
     }
     catch(e){
