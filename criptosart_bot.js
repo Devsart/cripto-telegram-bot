@@ -14,14 +14,6 @@ const client = new Client({
 
 client.connect();
 
-client.query('SELECT * FROM tb_criptolist;', (err, res) => {
-    if (err) throw err;
-    for (let row of res.rows) {
-      console.log(JSON.stringify(row));
-    }
-    client.end();
-  });
-
 var app = express();
 
 app.use(express.json());
@@ -87,7 +79,6 @@ bot.onText(/\/lista (.+)/, async (msg, match) => {
         for (let row of res.rows) {
             usuario = row;
         }
-        client.end();
       });
       if(usuario == null){
         client.query(`INSERT INTO tb_criptolist VALUES ('${user_id}','${cripto_list}','${preco}');`, (err, res) => {
@@ -95,7 +86,6 @@ bot.onText(/\/lista (.+)/, async (msg, match) => {
             for (let row of res.rows) {
                 usuario = row;
             }
-            client.end();
           });
       }
       var mensagem = `O preço de ${nome} atualmente é USD ${preco}`
