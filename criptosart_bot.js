@@ -73,17 +73,17 @@ bot.onText(/\/lista (.+)/, async (msg, match) => {
       var cripto_list = lista.split(' ');
       var precos_list = [];
       console.log(cripto_list);
-      cripto_list.forEach(x =>{ 
+      for (var x in cripto_list){ 
           console.log(x);
           const resp = axios.get(`https://api.coingecko.com/api/v3/coins/${x}`).catch(
             function (error) {
               console.log('Show error notification!')
               return Promise.reject(error)
-            }
-          )
+            })
           var preco = resp.data.market_data.current_price.usd;
           console.log(preco);
-          precos_list.push(preco)});
+          precos_list.push(preco)
+        };
       var usuario = null
       client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`, (err, res) => {
         if (err) throw err;
