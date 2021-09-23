@@ -123,7 +123,7 @@ bot.onText(/\/monitorar/, async (msg, match) => {
         var mensagem = `Bem-vind@ *${msg.from.first_name}*! Aqui está o relatório da sua lista de criptoativos 📈:\n\n`
         for([index,cripto] of user_list.entries()){
           var sinal = Math.sign(list_precos[index]/user_precos[index] -1) >= 0 ? "+" : "-";
-          mensagem += `- ${cripto} - USD ${list_precos[index]} (${sinal}${Math.round((list_precos[index]/user_precos[index] -1 +Number.EPSILON)*10000)/100}%)`;
+          mensagem += ` • *${cripto}:*\n   • Preço de Compra: US$ ${user_precos[index]}\n   • Preço Atual: US$ ${list_precos[index]} (${sinal}${Math.round((list_precos[index]/user_precos[index] -1 +Number.EPSILON)*10000)/100}%)`;
           if(sinal == "+"){
             mensagem+=" 🟢\n"
           }
