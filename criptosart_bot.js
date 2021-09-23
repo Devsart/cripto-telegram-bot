@@ -66,10 +66,17 @@ bot.onText(/\/preço (.+)/, async (msg, match) => {
 
 bot.onText(/\/lista (.+)/, async (msg, match) => {
     var lista = match[1];
-  
+    var usuario;
     const chatId = msg.chat.id;
     try{
       var user_id = msg.from.id;
+      client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`, (err, res) => {
+        if (err) throw err;
+        for (let row of res.rows) {
+            usuario = row;
+            console.log(usuario);
+        }
+      });
       var cripto_list = lista.split(' ');
       var precos_list = [];
       console.log(cripto_list);
@@ -84,18 +91,10 @@ bot.onText(/\/lista (.+)/, async (msg, match) => {
           console.log(preco);
           precos_list.push(preco)
         });
-      var usuario = null
       console.log("checkpoint");
-      client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`, (err, res) => {
-        if (err) throw err;
-        for (let row of res.rows) {
-            usuario = row;
-            console.log(usuario);
-        }
-      });
       if(usuario == null){
         console.log('Deu merda no Insert')
-        client.query(`INSERT INTO tb_criptolist VALUES ('${user_id}','${cripto_list}','${preco}');`, (err, res) => {
+        client.query(`INSERT INTO tb_criptolist VALUES ('${user_id}','${cripto_list}','${precos_list}');`, (err, res) => {
             if (err) throw err;
           });
       }
