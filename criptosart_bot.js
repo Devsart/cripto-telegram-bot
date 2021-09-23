@@ -89,17 +89,20 @@ bot.onText(/\/lista (.+)/, async (msg, match) => {
         if (err) throw err;
         for (let row of res.rows) {
             usuario = row;
+            console.log(usuario);
         }
       });
       if(usuario == null){
+        console.log('Deu merda no Insert')
         client.query(`INSERT INTO tb_criptolist VALUES ('${user_id}','${cripto_list}','${preco}');`, (err, res) => {
             if (err) throw err;
           });
       }
       else{
+        console.log('Deu merda no update')
         client.query(`UPDATE tb_criptolist SET cripto_list = '${cripto_list}',precos_list ='${precos_list}' WHERE user_id = '${user_id}');`, (err, res) => {
             if (err) throw err;
-            console.log('Deu merda no update')
+            
           });
       }
       var mensagem = `O preço de  atualmente é USD ${preco}`
