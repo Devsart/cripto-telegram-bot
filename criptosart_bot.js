@@ -154,13 +154,13 @@ bot.onText(/\/alerta (.+)/, async (msg, match) => {
 
   async function getPrices(cripto_list){
     var precos_list = []
-    await cripto_list.forEach (x => { 
+    cripto_list.forEach (x => { 
       console.log(x);
       axios.get(`https://api.coingecko.com/api/v3/coins/${x}`).then(
         response => {
           var preco = response.data.market_data.current_price.usd;
           console.log(preco);
-          precos_list.push(preco.toString());
+          precos_list.push(preco);
         },
         error => console.log(error));
     });
