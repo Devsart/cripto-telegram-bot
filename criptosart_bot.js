@@ -119,7 +119,7 @@ bot.onText(/\/listar (.+)/, async (msg, match) => {
       bot.sendMessage(chatId,mensagem_erro);
       throw new Error("Whooops! parece que você tentou acessar algum token inexistente.")
     }
-  });
+});
 
 bot.onText(/\/monitorar/, async (msg, match) => {
   const chatId = msg.chat.id;
@@ -161,6 +161,30 @@ bot.onText(/\/monitorar/, async (msg, match) => {
   catch(err){
 
   }
+});
+
+bot.onText(/\/start/, async (msg, match) => {
+  const chatId = msg.chat.id;
+  var user_id = msg.from.id;
+  var user_name = msg.from.first_name;
+  var mensagem = `Olá *${user_name}*, seja bem-vind@!\n\nEu sou o $artinho e serei seu assistente virtual do criptoverso 🤖. Aqui está uma lista de comandos e como você pode utilizá-los para obter a melhor experiência possível:\n\n ▶ /p __moeda__ - Informa o preço atual de um determinado criptoativo.\n ▶ /listar __moeda1__ __moeda2__ ... __moedaN__ - Adiciona todas as N moedas citadas à sua lista de interesse.\n ▶ /listar __moeda1__ __moeda2__ ... __moedaN__ - Remove todas as N moedas citadas da sua lista de interesse.\n ▶ /monitorar - Permite verificar os preços atuais e as variações de todos os seus ativos listados.\n ▶ /limpar - Remove todos os itens presentes na sua lista de criptoativos.\n ▶ /ajuda - Fornece de forma mais detalhada as informações sobre os comandos.\n ▶ /doar - Oferece informações para meios de doação como forma de apoio ao projeto.\n\nCaso tenha sugestões ou queira compartilhar algo comigo, entre em (contato)[https://t.me/SheikPobre]👾. Faça bom proveito! 🚀`
+  bot.sendMessage(chatId, mensagem, { parse_mode: 'Markdown' });
+});
+
+bot.onText(/\/ajuda/, async (msg, match) => {
+  const chatId = msg.chat.id;
+  var user_id = msg.from.id;
+  var user_name = msg.from.first_name;
+  var mensagem = `É um pássaro? Não! É um avião? Não!! Sou eu! $artinho na área pronto para tentar te ajudar 🧞‍♂️, vamos lá? Nesta aba, tentarei explicar os comandos de forma mais detalhada, para que você consiga entender de uma vez por todas o melhor jeito de me utilizar! (Pegou meio mal isso né 😅): \n\n ▶ /p __moeda__ - Informa o preço atual de um determinado criptoativo. Para utilizar este comando, você deve substituir __moeda__ pelo símbolo da moeda desejada. Por exemplo: */p btc* lhe retornará o preço atual do Bitcoin! Certo?\n ▶ /listar __moeda1__ __moeda2__ ... __moedaN__ - Adiciona todas as N moedas citadas à sua lista de interesse. Para utilizar este comando, você deverá substituir as __moedas__ pelos simbolos desejados, separando-as com apenas um espaço entre elas. Exemplo: */listar btc eth xrp* Colocaria o Bitcoin, o Ethereum e o XRP da Ripple na minha lista.\n ▶ /listar __moeda1__ __moeda2__ ... __moedaN__ - Remove todas as N moedas citadas da sua lista de interesse. Segue a mesma lógica do comando /listar.\n ▶ /monitorar - Permite verificar os preços atuais e as variações de todos os seus ativos listados. Nesse caso não tem mistério, é só utilizar o comando sem adicionais mesmo para ver a magia acontecer. 🤣 Os próximos comandos obedecem a mesma regra.\n ▶ /limpar - Remove todos os itens presentes na sua lista de criptoativos.\n ▶ /ajuda - Fornece de forma mais detalhada as informações sobre os comandos.\n ▶ /doar - Oferece informações para meios de doação como forma de apoio ao projeto.\n\nEspero ter ajudado! 🤩`
+  bot.sendMessage(chatId, mensagem, { parse_mode: 'Markdown' });
+});
+
+bot.onText(/\/doar/, async (msg, match) => {
+  const chatId = msg.chat.id;
+  var user_id = msg.from.id;
+  var user_name = msg.from.first_name;
+  var mensagem = `Obrigado pelo apoio, *${user_name}*, você deve ser uma pessoa incrível, hehehe!\n\nVocê pode doar qualquer quantia que desejar, em cripto ou reais. Basta realizar uma transferência para um dos seguintes endereços:\n\n • *Carteira BinanceSmartChain(BEP20):* 0xAf6B7f760dB2936262FE6e4B62CD694E00c86688\n • *Chave Pix:* 701d04d1-38e4-4265-bfc1-bb48ab08df16\n\nCaso tenha sugestões ou queira ajudar o projeto, entre em contato! 😊`
+  bot.sendMessage(chatId, mensagem, { parse_mode: 'Markdown' });
 });
 
 bot.onText(/\/remover (.+)/, async (msg, match) => {
@@ -219,58 +243,7 @@ bot.onText(/\/remover (.+)/, async (msg, match) => {
   }
 });
 
-bot.onText(/\/alerta (.+)/, async (msg, match) => {
-    var moeda = match[1].split(' ');
-    var nome = moeda[0];
-    var valor = moeda[1];
-
-    const chatId = msg.chat.id;
-    try{
-        const resplist = await axios.get(`https://api.coingecko.com/api/v3/coins/list`);
-        resplist.data.forEach((x) => {
-            if(x.symbol == nome.toLowerCase()){
-                nome = x.id;
-            }
-        });
-        const resp = await axios.get(`https://api.coingecko.com/api/v3/coins/${nome}`);
-        var preco = resp.data.market_data.current_price.usd;
-        var mensagem_inicial = `O atual preço de ${nome} é de USD ${preco}... Eu te avisarei quando o preço chegar a USD ${valor}!`
-        bot.sendMessage(chatId, mensagem_inicial);
-    }
-    catch(e){
-        var mensagem_erro = `Desculpe, mas não consegui verificar o preço para ${nome}. Por favor, verifique se há algum erro de digitação ou se o Token realmente existe.`
-        bot.sendMessage(chatId,mensagem_erro);
-        throw new Error("Whooops! parece que você tentou acessar algum token inexistente.")
-    }
-    if(preco < valor){
-        do{
-            var status_alerta_alta = true;
-            const resp = await axios.get(`https://api.coingecko.com/api/v3/coins/${nome}`); 
-            var preco = resp.data.market_data.current_price.usd;
-            if(preco >= valor){
-                var mensagem = `O preço de ${nome} SUBIU atingiu o valor de USD ${preco}!! Corre lá!`
-                bot.sendMessage(chatId, mensagem);
-                status_alerta_alta = false;
-            }
-        }
-        while(status_alerta_alta)
-    }
-    else{
-        do{
-            var status_alerta_baixa = true;
-            const resp = await axios.get(`https://api.coingecko.com/api/v3/coins/${nome}`); // the captured "whatever"
-            var preco = resp.data.market_data.current_price.usd;
-            if(preco <= valor){
-                var mensagem = `O preço de ${nome} CAIU e atingiu o valor de USD ${preco}!! Corre lá!`
-                bot.sendMessage(chatId, mensagem);
-                status_alerta_baixa = false;
-            }
-        }
-        while(status_alerta_baixa)
-    }
-  });
-
-  async function getPrices(cripto_list){
+async function getPrices(cripto_list){
     var precos_list = []
     for(const cripto of cripto_list) {
       await axios.get(`https://api.coingecko.com/api/v3/coins/${cripto}`).then(
