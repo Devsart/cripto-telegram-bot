@@ -34,7 +34,7 @@ app.post(`/${process.env.BOTTOKEN}`, (req, res) => {
    });
 
 const token = process.env.BOTTOKEN;
-const resplist = await axios.get(`https://api.coingecko.com/api/v3/coins/list`);
+const resplist = axios.get(`https://api.coingecko.com/api/v3/coins/list`);
 let bot;
 
 if (process.env.NODE_ENV === 'production') {
