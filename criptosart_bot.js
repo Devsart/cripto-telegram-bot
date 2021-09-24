@@ -80,8 +80,8 @@ bot.onText(/\/listar (.+)/, async (msg, match) => {
         else if(res.rowCount>=1) {
           var user_list = res.rows[0].cripto_list.split(',');
           var user_precos = res.rows[0].precos_list.split(',');
-          for([index,cripto] of cripto_list.entries()){
-            const resplist = await axios.get(`https://api.coingecko.com/api/v3/coins/list`);
+          for await([index,cripto] of cripto_list.entries()){
+            const resplist = axios.get(`https://api.coingecko.com/api/v3/coins/list`);
                 resplist.data.forEach((x) => {
             if(x.symbol == cripto.toLowerCase()){
                 cripto = x.id;
