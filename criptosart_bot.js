@@ -34,7 +34,6 @@ app.post(`/${process.env.BOTTOKEN}`, (req, res) => {
    });
 
 const token = process.env.BOTTOKEN;
-const resplist = axios.get(`https://api.coingecko.com/api/v3/coins/list`);
 let bot;
 
 if (process.env.NODE_ENV === 'production') {
@@ -48,6 +47,7 @@ bot.onText(/\/preço (.+)/, async (msg, match) => {
 
   const chatId = msg.chat.id;
   try{
+    const resplist = await getList();
     resplist.data.forEach((x) => {
         if(x.symbol == nome.toLowerCase()){
             nome = x.id;
@@ -72,6 +72,7 @@ bot.onText(/\/listar (.+)/, async (msg, match) => {
       var user_id = msg.from.id;
       var cripto_list = lista.split(' ');
       const precos_list = await getPrices(cripto_list);
+      const resplist = await getList();
       console.log(cripto_list);
       console.log(precos_list);
       client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`, (err, res) => {
@@ -125,6 +126,7 @@ bot.onText(/\/monitorar/, async (msg, match) => {
         var user_list = res.rows[0].cripto_list.split(',');
         var user_precos = res.rows[0].precos_list.split(',');
         const list_precos = await getPrices(user_list);
+        const resplist = await getList();
         var mensagem = `Bem-vind@ *${msg.from.first_name}*! Aqui está o relatório da sua lista de criptoativos 📈:\n\n`
         for([index,cripto] of user_list.entries()){
             resplist.data.forEach((x) => {
@@ -222,11 +224,7 @@ bot.onText(/\/alerta (.+)/, async (msg, match) => {
     return precos_list;
   }
 
-async function getUsuario(user_id){
-  client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`, (err, res) => {
-    if(res)  
-      return res.rowCount;
-    if (err) 
-      throw err;
-  });
+async function getList(){
+    var resplist = await axios.get(`https://api.coingecko.com/api/v3/coins/list`);
+    return resplist;
 }
