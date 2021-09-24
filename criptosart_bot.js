@@ -82,6 +82,10 @@ bot.onText(/\/listar (.+)/, async (msg, match) => {
       const precos_list = await getPrices(cripto_list);
       console.log(cripto_list);
       console.log(precos_list);
+      if(cripto_list.length != precos_list.length){
+        var mensagem = `Hmmm... Parece que você está tentando listar um token que não conheço 🤔. Tem certeza que escreveu o nome correto?`
+        return bot.sendMessage(chatId, mensagem, { parse_mode: 'Markdown' });
+      }
       client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`, (err, res) => {
         if (err) 
           throw err;
@@ -277,7 +281,6 @@ bot.onText(/\/alerta (.+)/, async (msg, match) => {
         },
         error => console.log(error));
     };
-    console.log(precos_list);
     return precos_list;
   }
 
