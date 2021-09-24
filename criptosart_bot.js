@@ -42,7 +42,7 @@ if (process.env.NODE_ENV === 'production') {
  } else {
     bot = new TelegramBot(token, { polling: true });
  }
-bot.onText(/\/preço (.+)/, async (msg, match) => {
+bot.onText(/\/p (.+)/, async (msg, match) => {
   var nome = match[1];
 
   const chatId = msg.chat.id;
@@ -121,6 +121,8 @@ bot.onText(/\/listar (.+)/, async (msg, match) => {
     }
 });
 
+
+
 bot.onText(/\/monitorar/, async (msg, match) => {
   const chatId = msg.chat.id;
   var user_id = msg.from.id;
@@ -167,7 +169,7 @@ bot.onText(/\/start/, async (msg, match) => {
   const chatId = msg.chat.id;
   var user_id = msg.from.id;
   var user_name = msg.from.first_name;
-  var mensagem = `Olá *${user_name}*, seja bem-vind@!\n\nEu sou o $artinho e serei seu assistente virtual do criptoverso 🤖. Aqui está uma lista de comandos e como você pode utilizá-los para obter a melhor experiência possível:\n\n ➜ /p _moeda_ - Informa o preço atual de um determinado criptoativo.\n ➜ /listar _moeda1_ _moeda2_ ... _moedaN_ - Adiciona todas as N moedas citadas à sua lista de interesse.\n ➜ /listar _moeda1_ _moeda2_ ... _moedaN_ - Remove todas as N moedas citadas da sua lista de interesse.\n ➜ /monitorar - Permite verificar os preços atuais e as variações de todos os seus ativos listados.\n ➜ /limpar - Remove todos os itens presentes na sua lista de criptoativos.\n ➜ /ajuda - Fornece de forma mais detalhada as informações sobre os comandos.\n ➜ /doar - Oferece informações para meios de doação como forma de apoio ao projeto.\n\nCaso tenha sugestões ou queira compartilhar algo comigo, entre em [contato](https://t.me/SheikPobre)👾. Faça bom proveito! 🚀`
+  var mensagem = `Olá *${user_name}*, seja bem-vind@!\n\nEu sou o $artinho e serei seu assistente virtual do criptoverso 🤖. Aqui está uma lista de comandos e como você pode utilizá-los para obter a melhor experiência possível:\n\n ➜ /p _moeda_ - Informa o preço atual de um determinado criptoativo.\n ➜ /listar _moeda1_ _moeda2_ ... _moedaN_ - Adiciona todas as N moedas citadas à sua lista de interesse.\n ➜ /remover _moeda1_ _moeda2_ ... _moedaN_ - Remove todas as N moedas citadas da sua lista de interesse.\n ➜ /monitorar - Permite verificar os preços atuais e as variações de todos os seus ativos listados.\n ➜ /limpar - Remove todos os itens presentes na sua lista de criptoativos.\n ➜ /ajuda - Fornece de forma mais detalhada as informações sobre os comandos.\n ➜ /doar - Oferece informações para meios de doação como forma de apoio ao projeto.\n\nFaça bom proveito! 🚀`
   bot.sendMessage(chatId, mensagem, { parse_mode: 'Markdown' });
 });
 
@@ -175,7 +177,7 @@ bot.onText(/\/ajuda/, async (msg, match) => {
   const chatId = msg.chat.id;
   var user_id = msg.from.id;
   var user_name = msg.from.first_name;
-  var mensagem = `É um pássaro? Não! É um avião? Não!! Sou eu! $artinho na área pronto para tentar te ajudar 🧞‍♂️, vamos lá? Nesta aba, tentarei explicar os comandos de forma mais detalhada, para que você consiga entender de uma vez por todas o melhor jeito de me utilizar! (Pegou meio mal isso né 😅): \n\n ➜ /p _moeda_ - Informa o preço atual de um determinado criptoativo.\nPara utilizar este comando, você deve substituir _moeda_ pelo símbolo da moeda desejada.\n\n*Por exemplo:* _/p btc_ lhe retornará o preço atual do Bitcoin! Certo?\n ➜ /listar _moeda1_ _moeda2_ ... _moedaN_ - Adiciona todas as N moedas citadas à sua lista de interesse.\nPara utilizar este comando, você deverá substituir as _moedas_ pelos simbolos desejados, separando-as com apenas um espaço entre elas.\n\n*Exemplo:* _/listar btc eth xrp_ Colocaria o Bitcoin, o Ethereum e o XRP da Ripple na minha lista.\n ➜ /listar _moeda1_ _moeda2_ ... _moedaN_ - Remove todas as N moedas citadas da sua lista de interesse.\nSegue a mesma lógica do comando /listar.\n ➜ /monitorar - Permite verificar os preços atuais e as variações de todos os seus ativos listados.\nNesse caso não tem mistério, é só utilizar o comando sem adicionais mesmo para ver a magia acontecer. 🤣 Os próximos comandos obedecem a mesma regra.\n ➜ /limpar - Remove todos os itens presentes na sua lista de criptoativos.\n ➜ /ajuda - Fornece de forma mais detalhada as informações sobre os comandos.\n ➜ /doar - Oferece informações para meios de doação como forma de apoio ao projeto.\n\nEspero ter ajudado! 🤩`
+  var mensagem = `É um pássaro? Não! É um avião? Não!! Sou eu! $artinho na área pronto para tentar te ajudar 🧞‍♂️, vamos lá? Nesta aba, tentarei explicar os comandos de forma mais detalhada, para que você consiga entender de uma vez por todas o melhor jeito de me utilizar! (Pegou meio mal isso né 😅): \n\n ➜ /p _moeda_ - Informa o preço atual de um determinado criptoativo.\nPara utilizar este comando, você deve substituir _moeda_ pelo símbolo da moeda desejada.\n\n*Por exemplo:* _/p btc_ lhe retornará o preço atual do Bitcoin! Certo?\n\n ➜ /listar _moeda1_ _moeda2_ ... _moedaN_ - Adiciona todas as N moedas citadas à sua lista de interesse.\nPara utilizar este comando, você deverá substituir as _moedas_ pelos simbolos desejados, separando-as com apenas um espaço entre elas.\n\n*Exemplo:* _/listar btc eth xrp_ Colocaria o Bitcoin, o Ethereum e o XRP da Ripple na minha lista.\n\n ➜ /remover _moeda1_ _moeda2_ ... _moedaN_ - Remove todas as N moedas citadas da sua lista de interesse.\nSegue a mesma lógica do comando /listar.\n\n ➜ /monitorar - Permite verificar os preços atuais e as variações de todos os seus ativos listados.\nNesse caso não tem mistério, é só utilizar o comando sem adicionais mesmo para ver a magia acontecer. 🤣 Os próximos comandos obedecem a mesma regra.\n\n ➜ /limpar - Remove todos os itens presentes na sua lista de criptoativos.\n\n ➜ /ajuda - Fornece de forma mais detalhada as informações sobre os comandos.\n\n ➜ /doar - Oferece informações para meios de doação como forma de apoio ao projeto.\n\nEspero ter ajudado! 🤩`
   bot.sendMessage(chatId, mensagem, { parse_mode: 'Markdown' });
 });
 
@@ -183,7 +185,7 @@ bot.onText(/\/doar/, async (msg, match) => {
   const chatId = msg.chat.id;
   var user_id = msg.from.id;
   var user_name = msg.from.first_name;
-  var mensagem = `Obrigado pelo apoio, *${user_name}*, você deve ser uma pessoa incrível, hehehe!\n\nVocê pode doar qualquer quantia que desejar, em cripto ou reais. Basta realizar uma transferência para um dos seguintes endereços:\n\n • *Carteira BinanceSmartChain(BEP20):* 0xAf6B7f760dB2936262FE6e4B62CD694E00c86688\n • *Chave Pix:* 701d04d1-38e4-4265-bfc1-bb48ab08df16\n\nCaso tenha sugestões ou queira ajudar o projeto, entre em contato! 😊`
+  var mensagem = `Obrigado pelo apoio, *${user_name}*, você deve ser uma pessoa incrível, hehehe!\n\nVocê pode doar qualquer quantia que desejar, em cripto ou reais. Basta realizar uma transferência para um dos seguintes endereços:\n\n • *Carteira BinanceSmartChain(BEP20):* 0xAf6B7f760dB2936262FE6e4B62CD694E00c86688\n • *Chave Pix:* 701d04d1-38e4-4265-bfc1-bb48ab08df16\n\nCaso tenha sugestões ou queira ajudar o projeto, entre em [contato](https://t.me/SheikPobre)! 😊`
   bot.sendMessage(chatId, mensagem, { parse_mode: 'Markdown' });
 });
 
