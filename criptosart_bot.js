@@ -71,8 +71,15 @@ bot.onText(/\/listar (.+)/, async (msg, match) => {
     try{
       var user_id = msg.from.id;
       var cripto_list = lista.split(' ');
-      const precos_list = await getPrices(cripto_list);
       const resplist = await getList();
+      for(cripto of cripto_list){
+        resplist.data.forEach((x) => {
+          if(x.symbol == cripto.toLowerCase()){
+            cripto = x.id;
+          }
+        });
+      };
+      const precos_list = await getPrices(cripto_list);
       console.log(cripto_list);
       console.log(precos_list);
       client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`, (err, res) => {
@@ -82,11 +89,6 @@ bot.onText(/\/listar (.+)/, async (msg, match) => {
           var user_list = res.rows[0].cripto_list.split(',');
           var user_precos = res.rows[0].precos_list.split(',');
           for([index,cripto] of cripto_list.entries()){
-            resplist.data.forEach((x) => {
-              if(x.symbol == cripto.toLowerCase()){
-                cripto = x.id;
-              }
-            });
             if(user_list.indexOf(cripto)==-1){
               user_list.push(cripto);
               user_precos.push(precos_list[index]);
