@@ -159,6 +159,61 @@ bot.onText(/\/monitorar/, async (msg, match) => {
   }
 });
 
+bot.onText(/\/remover (.+)/, async (msg, match) => {
+  var lista = match[1];
+  const chatId = msg.chat.id;
+  try{
+    var user_id = msg.from.id;
+    var cripto_list = lista.split(' ');
+    const resplist = await getList();
+    for([index,cripto] of cripto_list.entries()){
+      resplist.data.forEach((x) => {
+        if(x.symbol == cripto.toLowerCase()){
+          cripto_list[index] = x.id;
+        }
+      });
+    };
+    const precos_list = await getPrices(cripto_list);
+    console.log(cripto_list);
+    console.log(precos_list);
+    client.query(`SELECT * FROM tb_criptolist WHERE user_id = '${user_id}';`, (err, res) => {
+      if (err) 
+        throw err;
+      else if(res.rowCount>=1) {
+        var user_list = res.rows[0].cripto_list.split(',');
+        var user_precos = res.rows[0].precos_list.split(',');
+        for([index,cripto] of cripto_list.entries()){
+          if(user_list.indexOf(cripto)!=-1){
+            var rm_index = user_list.indexOf(cripto)
+            user_list.splice(rm_index,1);
+            user_precos.splice(rm_index,1);
+          }
+          else{
+            var mensagem = `Hmmm... Parece que você não possui o criptoativo ${cripto} em sua lista. Para verificá-la basta enviar /monitorar`
+            bot.sendMessage(chatId, mensagem, { parse_mode: 'Markdown' });
+          }
+        }
+        client.query(`UPDATE tb_criptolist SET cripto_list = '${user_list}',precos_list ='${user_precos}' WHERE user_id = '${user_id}';`, (err, res) => {
+          if (err){
+            throw err;
+          }
+          console.log(`tabela atualizada para usuário ${user_id}`);
+          var mensagem = `Criptoativo removido com sucesso! ✅. Para verificar sua lista basta enviar /monitorar`
+          bot.sendMessage(chatId, mensagem, { parse_mode: 'Markdown' });           
+        })
+      }
+      else{
+        var mensagem = `Hmmm... Parece que você ainda não tem uma lista de criptoativos 🤔. Você pode criar uma usando o comando /listar`
+        bot.sendMessage(chatId, mensagem, { parse_mode: 'Markdown' });
+      }    
+    });
+  }
+  catch(e){
+    var mensagem_erro = `Desculpe, mas não consegui encontrar o token. Por favor, verifique se há algum erro de digitação ou se o Token realmente existe.`
+    bot.sendMessage(chatId,mensagem_erro);
+    throw new Error("Whooops! parece que você tentou acessar algum token inexistente.")
+  }
+});
 
 bot.onText(/\/alerta (.+)/, async (msg, match) => {
     var moeda = match[1].split(' ');
