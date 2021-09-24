@@ -72,10 +72,10 @@ bot.onText(/\/listar (.+)/, async (msg, match) => {
       var user_id = msg.from.id;
       var cripto_list = lista.split(' ');
       const resplist = await getList();
-      for(cripto of cripto_list){
+      for([index,cripto] of cripto_list.entries()){
         resplist.data.forEach((x) => {
           if(x.symbol == cripto.toLowerCase()){
-            cripto = x.id;
+            cripto_list[index] = x.id;
           }
         });
       };
