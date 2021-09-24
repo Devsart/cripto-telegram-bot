@@ -127,6 +127,7 @@ bot.onText(/\/atualizar (.+)/, async (msg, match) => {
   try{
     var user_id = msg.from.id;
     var moeda_preco = lista.split(' ');
+    const nome_moeda = moeda_preco[0];
     const resplist = await getList();
     resplist.data.forEach((x) => {
       if(x.symbol == moeda_preco[0].toLowerCase()){
@@ -139,21 +140,21 @@ bot.onText(/\/atualizar (.+)/, async (msg, match) => {
       else if(res.rowCount>=1) {
         var user_list = res.rows[0].cripto_list.split(',');
         var user_precos = res.rows[0].precos_list.split(',');
-        for([index,cripto] of cripto_list.entries()){
-          if(user_list.indexOf(moeda_preco[0])!=-1 && moeda_preco[1] > 0){
-            var att_index = user_list.indexOf(moeda_preco[0])
-            user_precos[att_index] = moeda_preco[1];
-          }
-          else{
-            var mensagem = `Hmmm...🧐 parece que você está tentando atualizar o preço de uma moeda que não está na sua lista. Verifique os campos e refaça o procedimento caso necessário.  😓`;
-            return bot.sendMessage(chatId, mensagem, { parse_mode: 'Markdown' });
-          }
+        if(user_list.indexOf(moeda_preco[0])!=-1 && moeda_preco[1] > 0){
+          var att_index = user_list.indexOf(moeda_preco[0])
+          user_precos[att_index] = moeda_preco[1];
+        }
+        else{
+          var mensagem = `Hmmm...🧐 parece que você está tentando atualizar o preço de uma moeda que não está na sua lista. Verifique os campos e refaça o procedimento caso necessário.  😓`;
+          return bot.sendMessage(chatId, mensagem, { parse_mode: 'Markdown' });
         }
         client.query(`UPDATE tb_criptolist SET cripto_list = '${user_list}',precos_list ='${user_precos}' WHERE user_id = '${user_id}';`, (err, res) => {
           if (err){
             throw err;
           }
-          console.log(`tabela atualizada para usuário ${user_id}`)            
+          var mensagem = `Acabei de atualizar o seu preço de compra de *${nome_moeda}* para *US$ ${moeda_preco[1]}*. Você pode verificar a atualização em /monitorar. 🤑`
+          bot.sendMessage(chatId, mensagem, { parse_mode: 'Markdown' });
+          console.log(`tabela atualizada para usuário ${user_id}`);           
         })
       }
       else{
@@ -181,6 +182,8 @@ bot.onText(/\/limpar/, async (msg, match) => {
           if (err){
             throw err;
           }
+          var mensagem = `Sua lista de criptoativos foi apagada com sucesso! 💸 Caso queira começar uma nova, adicione uma ou mais moedas com o comando /listar`
+          bot.sendMessage(chatId, mensagem, { parse_mode: 'Markdown' });
           console.log(`usuário limpou seu registro ${user_id}`)            
         })
       }
