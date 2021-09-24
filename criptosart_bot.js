@@ -80,10 +80,10 @@ bot.onText(/\/listar (.+)/, async (msg, match) => {
         else if(res.rowCount>=1) {
           var user_list = res.rows[0].cripto_list.split(',');
           var user_precos = res.rows[0].precos_list.split(',');
+          const resplist = await axios.get(`https://api.coingecko.com/api/v3/coins/list`);
           for([index,cripto] of cripto_list.entries()){
-            const resplist = axios.get(`https://api.coingecko.com/api/v3/coins/list`);
-                resplist.data.forEach((x) => {
-            if(x.symbol == cripto.toLowerCase()){
+            resplist.data.forEach((x) => {
+              if(x.symbol == cripto.toLowerCase()){
                 cripto = x.id;
               }
             });
@@ -127,9 +127,9 @@ bot.onText(/\/monitorar/, async (msg, match) => {
         var user_precos = res.rows[0].precos_list.split(',');
         const list_precos = await getPrices(user_list);
         var mensagem = `Bem-vind@ *${msg.from.first_name}*! Aqui está o relatório da sua lista de criptoativos 📈:\n\n`
+        const resplist = await axios.get(`https://api.coingecko.com/api/v3/coins/list`);
         for([index,cripto] of user_list.entries()){
-          const resplist = axios.get(`https://api.coingecko.com/api/v3/coins/list`);
-                resplist.data.forEach((x) => {
+            resplist.data.forEach((x) => {
             if(x.id == cripto.toLowerCase()){
                 cripto = x.symbol;
               }
